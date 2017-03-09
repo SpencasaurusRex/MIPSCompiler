@@ -16,7 +16,7 @@ Roadmap
           - Replacement optimization    a+b + a+b should turn to (a+b)<<2
           - Arrays
           - ?
-    3) If statement                                                              Projected (20 March, 2017)
+    3) If statement                                                              Projected to start 20 March, 2017
           - ?
     4) Loops
           - ?
