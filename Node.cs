@@ -25,15 +25,14 @@ namespace MIPSCompiler
             return left.ToMIPS() + right.ToMIPS() + MIPS;
         }
 
-        public Boolean IsLeaf()
+        public bool IsLeaf()
         {
             return left == null && right == null;
         }
 
-        // Defined as having one leaf child and one non-leaf child
-        public Boolean IsSimple()
+        public bool IsBranch()
         {
-            return left.IsLeaf() != right.IsLeaf();
+            return left != null || right != null;
         }
     }
 }

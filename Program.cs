@@ -8,7 +8,7 @@ namespace MIPSCompiler
         static int index = 0;
 
         // List of valid operators
-        static Operation[] operations = {
+        static Operation[] allOperations = {
             new Operation('=', 3, "Not supported"),
             new Operation('+', 2, "add"), new Operation('-', 2, "sub"),
             new Operation('*', 1, "mul"), new Operation('/', 1, "div") };
@@ -21,12 +21,10 @@ namespace MIPSCompiler
                 line += args[i];
             }
 
-            // Assume well formed
             // Remove all whitespace
             line = line.Replace(" ", string.Empty);
 
             // Convert to expression tree
-
             Node parent = CreateNode(line);
 
             // Turn expression tree into MIPS
@@ -35,25 +33,51 @@ namespace MIPSCompiler
 
         static Node CreateNode(String line)
         {
+            // If we received a line surrounded in parentheses, and none inside we can safely remove them
+            if (line.StartsWith("(") && line.EndsWith(")"))
+            {
+                String inner = line.Substring(1, line.Length - 2);
+                if (!inner.Contains("(") && !inner.Contains(")"))
+                {
+                    line = inner;
+                }
+            }
+
+            // Assume well formed (TODO: verify this)
+
             // Scan for the highest,rightest operation
             char[] charLine = line.ToCharArray();
             int highestPriority = 0;
             Operation highestPriorityOperation = null;
             int operationCharIndex = -1;
+            int parenthesesDepth = 0;
+
             for (int charIndex = charLine.Length - 1; charIndex >= 0; charIndex--)
             {
-                for (int operationIndex = 0; operationIndex < operations.Length; operationIndex++)
+                for (int operationIndex = 0; parenthesesDepth == 0 && operationIndex < allOperations.Length; operationIndex++)
                 {
                     // If it's an operation check its priority
-                    if (charLine[charIndex] == operations[operationIndex].character &&
-                        operations[operationIndex].priority > highestPriority)
+                    if (charLine[charIndex] == allOperations[operationIndex].character &&
+                        allOperations[operationIndex].priority > highestPriority)
                     {
-                        highestPriorityOperation = operations[operationIndex];
+                        highestPriorityOperation = allOperations[operationIndex];
                         highestPriority = highestPriorityOperation.priority;
                         operationCharIndex = charIndex;
                     }
                 }
+
+                // As we are reversing through the string, right parentheses increases depth and vice versa
+                if (charLine[charIndex] == ')')
+                {
+                    parenthesesDepth++;
+                }
+                else if (charLine[charIndex] == '(')
+                {
+                    parenthesesDepth--;
+                }
             }
+
+            // TODO: verify parenthesesDepth now at 0
 
             // Return a node with just the line if there are no operators found
             if (operationCharIndex == -1)
@@ -72,23 +96,19 @@ namespace MIPSCompiler
             parent.operation = highestPriorityOperation;
             parent.left = leftNode;
             parent.right = rightNode;
-            // If it's simple, it can inherit the ID of it's non-leaf child for simplification purposes
-            if (parent.IsSimple())
+
+            if (parent.left.IsBranch() || parent.right.IsBranch())
             {
-                if (parent.left.IsLeaf())
-                {
-                    parent.id = parent.right.id;
-                }
-                else
-                {
-                    parent.id = parent.left.id;
-                }
+                // TODO: Replace this with duplication tracking 
+                // (don't steal an id if it's duplicated elsewhere)
+                parent.id = 0;
             }
             else
             {
+                // TODO: Replace this with register tracking
+                // (Reuse ids if they are freed, when parent is evaluated?)
                 parent.id = index++;
             }
-
             return parent;
         }
     }
