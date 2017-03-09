@@ -5,7 +5,7 @@ MIPSCompiler
 Roadmap
 
     1) Basic expression parsing:                                                 DONE      (7th March, 2017)
-    2) Advanced expression parsing:                                              Started   (8th March, 2017)
+    2) Advanced expression parsing:                                              DONE      (9th March, 2017)
           - Parentheses                                                          Started   (8th March, 2017)
           - Validation                  Check for syntactical correctness
           - Register use tracking
