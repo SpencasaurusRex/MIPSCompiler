@@ -1,3 +1,5 @@
+I don't plan on returning to this
+
 MIPSCompiler
 
     Attempt to create a basic scripting language (MIPScript?) that compiles to MIPS Assembly Language
@@ -6,7 +8,7 @@ Roadmap
 
     1) Basic expression parsing:                                                 DONE      (7th March, 2017)
     2) Advanced expression parsing:                                              DONE      (9th March, 2017)
-          - Parentheses                                                          Started   (8th March, 2017)
+          - Parentheses                                                          
           - Validation                  Check for syntactical correctness
           - Register use tracking
           - Add immediate
@@ -17,7 +19,7 @@ Roadmap
           - Replacement optimization    a+b + a+b should turn to (a+b)<<2
           - Arrays
           - ?
-    3) If statement                                                              Projected to start 20 March, 2017
+    3) If statement                                                              
           - ?
     4) Loops
           - ?
